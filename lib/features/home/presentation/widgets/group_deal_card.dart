@@ -15,55 +15,64 @@ class GroupDealCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 8),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
       decoration: BoxDecoration(
         color: AppColors.statusSuccess.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(6),
         border: Border.all(
           color: AppColors.statusSuccess,
-          width: 1.5,
+          width: 1.2,
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 Icons.group,
-                size: 16,
+                size: 12,
                 color: AppColors.statusSuccess,
               ),
-              const SizedBox(width: 4),
-              Text(
-                '¡Ahorra en Grupo!',
-                style: TextStyle(
-                  fontFamily: 'Plus Jakarta Sans',
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.statusSuccess,
+              const SizedBox(width: 3),
+              Flexible(
+                child: Text(
+                  '¡Ahorra en Grupo!',
+                  style: TextStyle(
+                    fontFamily: 'Plus Jakarta Sans',
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.statusSuccess,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 3),
           Text(
             '3 personas: S/ ${groupPrice3.toStringAsFixed(2)} c/u',
             style: TextStyle(
               fontFamily: 'Plus Jakarta Sans',
-              fontSize: 11,
+              fontSize: 9,
               color: AppColors.ink,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 1),
           Text(
             'Por Mayor (6+): S/ ${groupPrice6Plus.toStringAsFixed(2)} c/u',
             style: TextStyle(
               fontFamily: 'Plus Jakarta Sans',
-              fontSize: 11,
+              fontSize: 9,
               color: AppColors.ink,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

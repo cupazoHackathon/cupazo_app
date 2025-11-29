@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/ui/theme/colors.dart';
-import '../../data/mock_products.dart';
+import '../../../../data/repositories/deal_repository.dart';
+import '../../data/deal_to_product_mapper.dart';
 import '../../domain/models/product.dart';
 import '../widgets/app_search_bar.dart';
 import '../widgets/category_header.dart';
@@ -12,10 +13,7 @@ import 'product_detail_screen.dart';
 class CategoryProductsScreen extends StatefulWidget {
   final String categoryName;
 
-  const CategoryProductsScreen({
-    super.key,
-    required this.categoryName,
-  });
+  const CategoryProductsScreen({super.key, required this.categoryName});
 
   @override
   State<CategoryProductsScreen> createState() => _CategoryProductsScreenState();
@@ -25,6 +23,10 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
   List<Product> _products = [];
   String _selectedSort = 'relevante';
   String _searchQuery = '';
+  bool _isLoading = true;
+  String? _errorMessage;
+
+  final _dealRepository = DealRepository();
 
   @override
   void initState() {
@@ -32,11 +34,54 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
     _loadProducts();
   }
 
-  void _loadProducts() {
+  /// Map UI category names to Supabase category values
+  String _mapCategoryToSupabase(String categoryName) {
+    // Normalizamos la entrada a minúsculas para buscar en el mapa
+    final key = categoryName.toLowerCase();
+
+    final categoryMap = {
+      'ropa': 'Ropa', // Actualizado para coincidir con Supabase ("Ropa")
+      'zapatillas': 'Zapatillas',
+      'accesorios': 'Accesorios',
+      'decoración': 'Decoracion',
+      'joyas': 'Joyas',
+      'hecho a mano': 'Hecho a Mano',
+      'cuidado personal': 'Cuidado Personal',
+      'bolsos': 'Bolsos',
+      'food': 'food',
+    };
+
+    // Si no está en el mapa, devolvemos el nombre original (capitalizado por defecto)
+    return categoryMap[key] ?? categoryName;
+  }
+
+  Future<void> _loadProducts() async {
     setState(() {
-      _products = MockProducts.getProductsByCategory(widget.categoryName);
-      _applySort();
+      _isLoading = true;
+      _errorMessage = null;
     });
+
+    try {
+      // Map category name to Supabase category value
+      final supabaseCategory = _mapCategoryToSupabase(widget.categoryName);
+
+      // Get deals from Supabase
+      final deals = await _dealRepository.getDealsByCategory(supabaseCategory);
+
+      // Convert DealModel to Product
+      final products = DealToProductMapper.toProductList(deals);
+
+      setState(() {
+        _products = products;
+        _applySort();
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Error al cargar productos: $e';
+        _isLoading = false;
+      });
+    }
   }
 
   void _applySort() {
@@ -89,7 +134,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
               onSearchChanged: _onSearchChanged,
             ),
 
-            // Category Header
+            // Category Header - sin espacio extra
             CategoryHeader(
               categoryName: widget.categoryName,
               productCount: _filteredProducts.length,
@@ -103,7 +148,37 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
 
             // Products Grid
             Expanded(
-              child: _filteredProducts.isEmpty
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _errorMessage != null
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.error_outline,
+                            size: 64,
+                            color: AppColors.inkSoft,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            _errorMessage!,
+                            style: TextStyle(
+                              fontFamily: 'Plus Jakarta Sans',
+                              fontSize: 16,
+                              color: AppColors.inkSoft,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: _loadProducts,
+                            child: const Text('Reintentar'),
+                          ),
+                        ],
+                      ),
+                    )
+                  : _filteredProducts.isEmpty
                   ? Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -129,23 +204,26 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
                       padding: const EdgeInsets.all(16),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                        childAspectRatio: 0.65,
-                      ),
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                            childAspectRatio:
+                                0.70, // Ajustado para evitar overflow
+                          ),
                       itemCount: _filteredProducts.length,
                       itemBuilder: (context, index) {
                         final product = _filteredProducts[index];
+                        // Asignar ranking a los primeros 2 productos (más populares)
+                        final ranking = index < 2 ? index + 1 : null;
                         return ProductCard(
                           product: product,
+                          ranking: ranking,
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ProductDetailScreen(
-                                  product: product,
-                                ),
+                                builder: (context) =>
+                                    ProductDetailScreen(product: product),
                               ),
                             );
                           },
@@ -159,4 +237,3 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
     );
   }
 }
-

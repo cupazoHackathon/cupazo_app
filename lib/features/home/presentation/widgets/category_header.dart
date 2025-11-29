@@ -22,22 +22,30 @@ class CategoryHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            categoryName,
-            style: TextStyle(
-              fontFamily: 'Plus Jakarta Sans',
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: AppColors.deepBlack,
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              categoryName,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontFamily: 'Plus Jakarta Sans',
+                fontSize: 32, // Aumentado de 24 a 32 para que se vea más grande
+                fontWeight: FontWeight.bold,
+                color: AppColors.deepBlack,
+              ),
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            '$productCount productos disponibles',
-            style: TextStyle(
-              fontFamily: 'Plus Jakarta Sans',
-              fontSize: 14,
-              color: AppColors.inkSoft,
+          const SizedBox(height: 6),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              '$productCount productos disponibles',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontFamily: 'Plus Jakarta Sans',
+                fontSize: 14,
+                color: AppColors.inkSoft,
+              ),
             ),
           ),
         ],
@@ -45,4 +53,3 @@ class CategoryHeader extends StatelessWidget {
     );
   }
 }
-
