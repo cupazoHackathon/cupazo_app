@@ -1,0 +1,17 @@
+# Features folder
+# Cada feature debe seguir la estructura:
+# features/<feature_name>/
+#   - presentation/
+#     - pages/
+#     - widgets/
+#     - state/
+#   - domain/
+#     - entities/
+#     - repositories/
+#     - usecases/
+#   - data/
+#     - datasources/
+#       - remote/
+#       - local/
+#     - models/
+#     - repositories/
