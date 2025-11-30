@@ -61,7 +61,12 @@ class OrderTrackingScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             // Payment Details
-            _buildPaymentDetails(paymentMethod, product.currentPrice, shippingCost, totalPaid),
+            _buildPaymentDetails(
+              paymentMethod,
+              product.currentPrice,
+              shippingCost,
+              totalPaid,
+            ),
             const SizedBox(height: 24),
 
             // Order Details
@@ -129,11 +134,7 @@ class OrderTrackingScreen extends StatelessWidget {
               ),
             ],
           ),
-          const Divider(
-            color: Colors.white,
-            height: 32,
-            thickness: 1,
-          ),
+          const Divider(color: Colors.white, height: 32, thickness: 1),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -198,7 +199,7 @@ class OrderTrackingScreen extends StatelessWidget {
         ),
         _buildTimelineStep(
           icon: Icons.local_shipping,
-          title: 'En Camino con Rappi',
+          title: 'En Camino',
           description: 'Tu pedido llegará en 15 minutos!',
           timestamp: 'En progreso...',
           isCompleted: false,
@@ -226,8 +227,8 @@ class OrderTrackingScreen extends StatelessWidget {
     final circleColor = isCompleted
         ? AppColors.statusSuccess
         : isInProgress
-            ? const Color(0xFFFF8A00)
-            : Colors.grey[300]!;
+        ? const Color(0xFFFF8A00)
+        : Colors.grey[300]!;
     final textColor = isCompleted || isInProgress
         ? AppColors.ink
         : AppColors.inkSoft;
@@ -247,18 +248,10 @@ class OrderTrackingScreen extends StatelessWidget {
                   color: circleColor,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  icon,
-                  color: Colors.white,
-                  size: 20,
-                ),
+                child: Icon(icon, color: Colors.white, size: 20),
               ),
               if (!isCompleted && !isInProgress)
-                Container(
-                  width: 2,
-                  height: 40,
-                  color: Colors.grey[300],
-                ),
+                Container(width: 2, height: 40, color: Colors.grey[300]),
             ],
           ),
           const SizedBox(width: 16),
@@ -310,18 +303,11 @@ class OrderTrackingScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.grey[200]!,
-          width: 1,
-        ),
+        border: Border.all(color: Colors.grey[200]!, width: 1),
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.location_on,
-            color: Colors.green[400],
-            size: 24,
-          ),
+          Icon(Icons.location_on, color: Colors.green[400], size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -377,10 +363,7 @@ class OrderTrackingScreen extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Colors.grey[200]!,
-              width: 1,
-            ),
+            border: Border.all(color: Colors.grey[200]!, width: 1),
           ),
           child: Column(
             children: [
@@ -480,10 +463,7 @@ class OrderTrackingScreen extends StatelessWidget {
                 width: double.infinity,
                 child: OutlinedButton.icon(
                   onPressed: () {},
-                  icon: Icon(
-                    Icons.receipt,
-                    color: AppColors.ink,
-                  ),
+                  icon: Icon(Icons.receipt, color: AppColors.ink),
                   label: Text(
                     'Ver Comprobante de Pago',
                     style: TextStyle(
@@ -495,7 +475,10 @@ class OrderTrackingScreen extends StatelessWidget {
                   ),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 12),
-                    side: BorderSide(color: AppColors.primaryYellow, width: 1.5),
+                    side: BorderSide(
+                      color: AppColors.primaryYellow,
+                      width: 1.5,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -528,10 +511,7 @@ class OrderTrackingScreen extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Colors.grey[200]!,
-              width: 1,
-            ),
+            border: Border.all(color: Colors.grey[200]!, width: 1),
           ),
           child: Row(
             children: [
@@ -615,11 +595,7 @@ class OrderTrackingScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.access_time,
-            color: Colors.blue[700],
-            size: 24,
-          ),
+          Icon(Icons.access_time, color: Colors.blue[700], size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -710,4 +686,3 @@ class OrderTrackingScreen extends StatelessWidget {
     );
   }
 }
-

@@ -40,14 +40,14 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
     final key = categoryName.toLowerCase();
 
     final categoryMap = {
-      'ropa': 'Ropa', // Actualizado para coincidir con Supabase ("Ropa")
-      'zapatillas': 'Zapatillas',
-      'accesorios': 'Accesorios',
-      'decoración': 'Decoracion',
-      'joyas': 'Joyas',
-      'hecho a mano': 'Hecho a Mano',
-      'cuidado personal': 'Cuidado Personal',
-      'bolsos': 'Bolsos',
+      'ropa': 'ropa',
+      'zapatillas': 'zapatillas',
+      'accesorios': 'accesorios',
+      'decoración': 'decoracion',
+      'joyas': 'joyas',
+      'hecho a mano': 'hecho_a_mano',
+      'cuidado personal': 'cuidado_personal',
+      'bolsos': 'bolsos',
       'food': 'food',
     };
 

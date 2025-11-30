@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/ui/theme/colors.dart';
 import '../../profile/presentation/pages/profile_screen.dart';
 import 'pages/category_products_screen.dart';
+import 'widgets/recommended_users_row.dart';
 
 /// Pantalla principal de Cupazo
 class HomeScreen extends StatefulWidget {
@@ -43,6 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 24),
+
+                      // Recommended Users Section
+                      const RecommendedUsersRow(),
+                      const SizedBox(height: 20),
 
                       // Title Section
                       Padding(
@@ -188,14 +193,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildPromoBanner() {
     return Container(
-      margin: const EdgeInsets.symmetric(
-        horizontal: 8,
-      ), // Margen reducido para que sea más ancho
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.primaryYellow,
-        borderRadius: BorderRadius.circular(16),
-      ),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      decoration: const BoxDecoration(color: AppColors.primaryYellow),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

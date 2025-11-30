@@ -7,6 +7,7 @@ import '../../../../data/repositories/match_group_repository.dart';
 import '../../../../data/repositories/match_group_member_repository.dart';
 import '../../../../data/repositories/transaction_repository.dart';
 import '../../../../services/supabase_service.dart';
+import 'order_tracking_screen.dart';
 
 /// Pantalla de pago de grupo
 class GroupPaymentScreen extends StatefulWidget {
@@ -1099,21 +1100,56 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
                         amountTotal: _groupPrice,
                         platformFee: 0.0, // Mock
                         deliveryFee: 0.0, // Mock
-                        paymentStatus: 'completed',
+                        paymentStatus: 'pending',
                         stripePaymentId: 'mock_payment_id',
                       );
 
-                      // Navegar de regreso a la pantalla de detalle del producto
+                      // Verificar si el grupo se completó con este usuario
+                      bool isGroupComplete = false;
+                      if (widget.isJoining) {
+                        // Si me uno a un grupo existente, sumo 1 al conteo actual
+                        final newMemberCount = widget.group.currentMembers + 1;
+                        isGroupComplete =
+                            newMemberCount >= widget.group.requiredMembers;
+                      } else {
+                        // Si creo un nuevo grupo, soy el primer miembro
+                        // El grupo estará completo solo si requiredMembers es 1
+                        isGroupComplete = 1 >= widget.group.requiredMembers;
+                      }
+
                       if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              '¡Grupo creado exitosamente! Esperando a otros miembros.',
+                        if (isGroupComplete) {
+                          // Si el grupo se completó, ir a la pantalla de seguimiento
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => OrderTrackingScreen(
+                                product: widget.product,
+                                orderCode:
+                                    'ORD-${DateTime.now().millisecondsSinceEpoch.toString().substring(8)}',
+                                paymentMethod: _selectedPaymentMethod == 'card'
+                                    ? 'Tarjeta ${_savedCards.firstWhere((c) => c['id'] == _selectedCardId, orElse: () => {'type': 'Unknown'})['type']?.toString().toUpperCase()}'
+                                    : _selectedPaymentMethod == 'yape'
+                                    ? 'Yape'
+                                    : 'Plin',
+                                shippingCost: 5.00, // Mock shipping cost
+                                deliveryAddress:
+                                    'Av. Larco 1234, Miraflores', // Mock address
+                              ),
                             ),
-                            backgroundColor: AppColors.statusSuccess,
-                          ),
-                        );
-                        Navigator.of(context).pop(true);
+                          );
+                        } else {
+                          // Si no se completó, volver a la pantalla anterior
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                '¡Grupo creado exitosamente! Esperando a otros miembros.',
+                              ),
+                              backgroundColor: AppColors.statusSuccess,
+                            ),
+                          );
+                          Navigator.of(context).pop(true);
+                        }
                       }
                     } catch (e) {
                       if (mounted) {
@@ -1159,4 +1195,3 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
     );
   }
 }
-

@@ -50,9 +50,7 @@ class DealToProductMapper {
       originalPrice: regularPrice, // Precio tachado
       currentPrice: regularPrice,  // Precio individual (venta normal)
       discountPercentage: discountPercentage,
-      imageUrl: deal.imageUrl.isNotEmpty
-          ? deal.imageUrl
-          : 'https://via.placeholder.com/400?text=${Uri.encodeComponent(deal.title)}',
+      imageUrl: deal.imageUrl,
       groupPrice3: groupPrice3,    // Precio oferta grupo
       groupPrice6Plus: groupPrice6Plus,
       interestedCount: 0, // Will be updated from deal_interests if needed
@@ -62,8 +60,12 @@ class DealToProductMapper {
     );
   }
 
+
   /// Convert a list of DealModel to a list of Product
   static List<Product> toProductList(List<DealModel> deals) {
-    return deals.map((deal) => toProduct(deal)).toList();
+    return deals
+        .where((deal) => deal.imageUrl.trim().isNotEmpty)
+        .map((deal) => toProduct(deal))
+        .toList();
   }
 }
