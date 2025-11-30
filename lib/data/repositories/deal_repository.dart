@@ -24,19 +24,55 @@ class DealRepository {
   }
 
   /// Get all deals in a specific category
+  /// Solo retorna deals que tienen image_url no null
   Future<List<DealModel>> getDealsByCategory(String category) async {
     try {
+      print('📡 [DealRepository] Consultando deals con categoría: "$category"');
+      print(
+        '📡 [DealRepository] Filtros: category="$category", active=true, image_url IS NOT NULL',
+      );
+
+      // Consulta que excluye solo los deals con image_url null
+      print('📡 [DealRepository] Ejecutando consulta...');
       final response = await _supabase
           .from('deals')
-          .select('*, match_groups(status, match_group_members(user_id))')
+          .select('*')
           .eq('category', category)
           .eq('active', true)
+          .not(
+            'image_url',
+            'is',
+            null,
+          ) // Excluir solo los que tienen image_url null
           .order('created_at', ascending: false);
 
-      return (response as List)
-          .map((json) => DealModel.fromJson(json as Map<String, dynamic>))
-          .toList();
-    } catch (e) {
+      print('📡 [DealRepository] Respuesta recibida de Supabase');
+      print('📡 [DealRepository] Tipo de respuesta: ${response.runtimeType}');
+
+      final dealsList = (response as List);
+      print(
+        '📡 [DealRepository] Total de registros en respuesta: ${dealsList.length}',
+      );
+
+      if (dealsList.isNotEmpty) {
+        print('📡 [DealRepository] Primer registro: ${dealsList.first}');
+      }
+
+      final deals = dealsList.map((json) {
+        try {
+          return DealModel.fromJson(json as Map<String, dynamic>);
+        } catch (e) {
+          print('⚠️ [DealRepository] Error al parsear deal: $e');
+          print('⚠️ [DealRepository] JSON problemático: $json');
+          rethrow;
+        }
+      }).toList();
+
+      print('✅ [DealRepository] Deals parseados exitosamente: ${deals.length}');
+      return deals;
+    } catch (e, stackTrace) {
+      print('❌ [DealRepository] ERROR en getDealsByCategory: $e');
+      print('❌ [DealRepository] Stack trace: $stackTrace');
       throw Exception('Error fetching deals by category: $e');
     }
   }
@@ -111,7 +147,8 @@ class DealRepository {
     final double dLat = _toRadians(lat2 - lat1);
     final double dLon = _toRadians(lon2 - lon1);
 
-    final double a = math.sin(dLat / 2) * math.sin(dLat / 2) +
+    final double a =
+        math.sin(dLat / 2) * math.sin(dLat / 2) +
         math.cos(_toRadians(lat1)) *
             math.cos(_toRadians(lat2)) *
             math.sin(dLon / 2) *
@@ -130,4 +167,3 @@ class DealRepository {
 // final categoryDeals = await dealRepo.getDealsByCategory('Ropa');
 // final activeDeals = await dealRepo.getActiveDeals();
 // final nearbyDeals = await dealRepo.getActiveDealsNear(40.4168, -3.7038, radiusKm: 10);
-

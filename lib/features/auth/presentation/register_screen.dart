@@ -87,18 +87,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             content: const Text(
               'Te hemos enviado un correo de confirmación. Por favor revisa tu bandeja de entrada.',
-              style: TextStyle(
-                fontFamily: 'Plus Jakarta Sans',
-              ),
+              style: TextStyle(fontFamily: 'Plus Jakarta Sans'),
             ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    AppRoutes.login,
-                    (route) => false,
-                  );
+                  Navigator.of(
+                    context,
+                  ).pushNamedAndRemoveUntil(AppRoutes.login, (route) => false);
                 },
                 child: const Text(
                   'Aceptar',
@@ -114,7 +111,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
       } else {
         setState(() {
-          _errorMessage = 'Error al crear la cuenta. Por favor intenta de nuevo.';
+          _errorMessage =
+              'Error al crear la cuenta. Por favor intenta de nuevo.';
         });
       }
     } on AuthException catch (e) {
@@ -147,19 +145,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: AppTypography.bodySmall,
-        ),
+        Text(label, style: AppTypography.bodySmall),
         const SizedBox(height: 8),
         Container(
           height: 52,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: AppColors.primaryYellow,
-              width: 2,
-            ),
+            border: Border.all(color: AppColors.primaryYellow, width: 2),
           ),
           child: TextFormField(
             controller: controller,
@@ -169,16 +161,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
             style: AppTypography.body,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: AppTypography.body.copyWith(
-                color: AppColors.inkSoft,
-              ),
+              hintStyle: AppTypography.body.copyWith(color: AppColors.inkSoft),
               prefixIcon: Padding(
                 padding: const EdgeInsets.only(left: 12, right: 8),
-                child: Icon(
-                  icon,
-                  color: AppColors.inkMuted,
-                  size: 22,
-                ),
+                child: Icon(icon, color: AppColors.inkMuted, size: 22),
               ),
               prefixIconConstraints: const BoxConstraints(
                 minWidth: 42,
@@ -206,7 +192,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFFFFF8E1), // Light cream
+              AppColors.background, // Light cream
               Color(0xFFFFFFFF), // White
             ],
           ),
@@ -412,10 +398,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               decoration: BoxDecoration(
                                 color: _lightBlue,
                                 borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: _darkBlue,
-                                  width: 1,
-                                ),
+                                border: Border.all(color: _darkBlue, width: 1),
                               ),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -488,8 +471,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           strokeWidth: 2,
                                           valueColor:
                                               AlwaysStoppedAnimation<Color>(
-                                            Colors.white,
-                                          ),
+                                                Colors.white,
+                                              ),
                                         ),
                                       )
                                     : const Text(
@@ -509,7 +492,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: AppColors.accentDanger.withOpacity(0.1),
+                                  color: AppColors.accentDanger.withOpacity(
+                                    0.1,
+                                  ),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
@@ -599,4 +584,3 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
-

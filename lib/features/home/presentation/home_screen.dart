@@ -15,70 +15,61 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  // Colors from design
-  static const Color _deepBlack = Color(0xFF1A1A1A);
-  static const Color _orangeHighlight = Color(0xFFFF8A00);
-  static const Color _lightCream = Color(0xFFFFF8E1);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [_lightCream, Colors.white],
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Top Search Bar with Blue Header
-              _buildSearchHeader(),
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Modern Search Header
+            _buildSearchHeader(),
 
-              // Main Content
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 24),
+            // Main Content
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 24),
 
-                      // Recommended Users Section
-                      const RecommendedUsersRow(),
-                      const SizedBox(height: 20),
+                    // Recommended Users Section
+                    const RecommendedUsersRow(),
+                    const SizedBox(height: 24),
 
-                      // Title Section
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: _buildTitleSection(),
-                      ),
-                      const SizedBox(height: 20),
+                    // Title Section
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: _buildTitleSection(),
+                    ),
+                    const SizedBox(height: 20),
 
-                      // Yellow Promo Banner (Extendido)
-                      _buildPromoBanner(),
-                      const SizedBox(height: 32),
+                    // Modern Promo Banner
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: _buildPromoBanner(),
+                    ),
+                    const SizedBox(height: 32),
 
-                      // Categories Grid
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: _buildCategoriesSection(),
-                      ),
-                      const SizedBox(height: 32),
+                    // Categories Grid
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: _buildCategoriesSection(),
+                    ),
+                    const SizedBox(height: 32),
 
-                      // Unique Collections Section
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: _buildCollectionsSection(),
-                      ),
-                      const SizedBox(height: 100), // Space for bottom nav
-                    ],
-                  ),
+                    // Unique Collections Section
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: _buildCollectionsSection(),
+                    ),
+                    const SizedBox(height: 100), // Space for bottom nav
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: _buildBottomNavBar(),
@@ -87,12 +78,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildSearchHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
-        color: AppColors.deepBlack,
+        color: AppColors.surface,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
         borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(20),
-          bottomRight: Radius.circular(20),
+          bottomLeft: Radius.circular(24),
+          bottomRight: Radius.circular(24),
         ),
       ),
       child: Row(
@@ -100,67 +98,73 @@ class _HomeScreenState extends State<HomeScreen> {
           // Search Bar
           Expanded(
             child: Container(
-              height: 44,
+              height: 48,
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+                color: AppColors.background,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.line),
               ),
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: 'Buscar ropa, zapatillas c',
+                  hintText: 'Buscar ropa, zapatillas...',
                   hintStyle: TextStyle(
                     fontFamily: 'Plus Jakarta Sans',
                     fontSize: 14,
-                    color: Colors.grey[600],
+                    color: AppColors.inkLighter,
                   ),
-                  prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: AppColors.inkLight,
+                  ),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 16),
 
           // Cart Icon
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: AppColors.primaryYellow,
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              icon: Icon(
-                Icons.shopping_cart_outlined,
-                color: AppColors.deepBlack,
-              ),
-              onPressed: () {},
-            ),
+          _buildHeaderIconButton(
+            icon: Icons.shopping_cart_outlined,
+            onTap: () {},
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 12),
 
           // Profile Icon
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: AppColors.primaryYellow,
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              icon: Icon(Icons.person_outline, color: AppColors.deepBlack),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ProfileScreen(),
-                  ),
-                );
-              },
-            ),
+          _buildHeaderIconButton(
+            icon: Icons.person_outline,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+              );
+            },
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildHeaderIconButton({
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 48,
+        height: 48,
+        decoration: BoxDecoration(
+          color: AppColors.primaryYellow.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Icon(icon, color: AppColors.deepBlack, size: 24),
       ),
     );
   }
@@ -169,22 +173,24 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           '¡Ofertas Exclusivas!',
           style: TextStyle(
             fontFamily: 'Plus Jakarta Sans',
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            color: _deepBlack,
+            fontSize: 26,
+            fontWeight: FontWeight.w800,
+            color: AppColors.deepBlack,
+            letterSpacing: -0.5,
           ),
         ),
         const SizedBox(height: 8),
         Text(
-          'Descubre productos únicos de emprendedores y marcas',
+          'Descubre productos únicos de emprendedores',
           style: TextStyle(
             fontFamily: 'Plus Jakarta Sans',
-            fontSize: 14,
-            color: _deepBlack.withOpacity(0.7),
+            fontSize: 15,
+            color: AppColors.inkLight,
+            height: 1.4,
           ),
         ),
       ],
@@ -194,38 +200,57 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildPromoBanner() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      decoration: const BoxDecoration(color: AppColors.primaryYellow),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: AppColors.primaryGradient,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primaryYellow.withOpacity(0.4),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'PROMOCIÓN ESPECIAL',
-            style: TextStyle(
-              fontFamily: 'Plus Jakarta Sans',
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: _deepBlack,
-              letterSpacing: 0.5,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: AppColors.deepBlack,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Text(
+              'PROMOCIÓN ESPECIAL',
+              style: TextStyle(
+                fontFamily: 'Plus Jakarta Sans',
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primaryYellow,
+                letterSpacing: 1,
+              ),
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            'Hasta 60% OFF en Moda',
+          const SizedBox(height: 16),
+          const Text(
+            'Hasta 60% OFF\nen Moda',
             style: TextStyle(
               fontFamily: 'Plus Jakarta Sans',
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: _deepBlack,
+              fontSize: 28,
+              fontWeight: FontWeight.w900,
+              color: AppColors.deepBlack,
+              height: 1.1,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Text(
-            'Nuevos emprendedores destacados cada semana',
+            'Nuevos emprendedores destacados',
             style: TextStyle(
               fontFamily: 'Plus Jakarta Sans',
-              fontSize: 12,
-              color: _deepBlack.withOpacity(0.7),
+              fontSize: 14,
+              color: AppColors.deepBlack.withOpacity(0.8),
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],
@@ -235,49 +260,75 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildCategoriesSection() {
     final categories = [
-      {'name': 'Ropa', 'icon': Icons.checkroom, 'color': _orangeHighlight},
-      {'name': 'Zapatillas', 'icon': Icons.shopping_bag, 'color': _deepBlack},
+      {
+        'name': 'Ropa',
+        'icon': Icons.checkroom,
+        'color': AppColors.secondaryOrange,
+      },
+      {
+        'name': 'Zapatillas',
+        'icon': Icons.shopping_bag,
+        'color': AppColors.secondaryTeal,
+      },
       {
         'name': 'Accesorios',
         'icon': Icons.watch,
-        'color': AppColors.primaryYellow,
+        'color': AppColors.primaryPurple,
       },
-      {'name': 'Decoración', 'icon': Icons.home, 'color': Colors.purple},
-      {'name': 'Joyas', 'icon': Icons.diamond, 'color': _orangeHighlight},
-      {'name': 'Hecho a Mano', 'icon': Icons.auto_awesome, 'color': _deepBlack},
       {
-        'name': 'Cuidado Personal',
-        'icon': Icons.water_drop,
-        'color': AppColors.primaryYellow,
+        'name': 'Decoración',
+        'icon': Icons.home,
+        'color': AppColors.secondaryBlue,
       },
+      {'name': 'Joyas', 'icon': Icons.diamond, 'color': AppColors.warning},
+      {
+        'name': 'Hecho a Mano',
+        'icon': Icons.auto_awesome,
+        'color': AppColors.error,
+      },
+      {'name': 'Cuidado', 'icon': Icons.water_drop, 'color': AppColors.info},
       {
         'name': 'Bolsos',
         'icon': Icons.shopping_bag_outlined,
-        'color': Colors.purple,
+        'color': AppColors.success,
       },
     ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Categorías',
-          style: TextStyle(
-            fontFamily: 'Plus Jakarta Sans',
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: _deepBlack,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Categorías',
+              style: TextStyle(
+                fontFamily: 'Plus Jakarta Sans',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppColors.deepBlack,
+              ),
+            ),
+            Text(
+              'Ver todo',
+              style: TextStyle(
+                fontFamily: 'Plus Jakarta Sans',
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primaryPurple,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
         GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 4,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: 0.85,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 20,
+            childAspectRatio: 0.75,
           ),
           itemCount: categories.length,
           itemBuilder: (context, index) {
@@ -293,7 +344,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCategoryCard(String name, IconData icon, Color iconColor) {
+  Widget _buildCategoryCard(String name, IconData icon, Color color) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -303,45 +354,31 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
       },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+      child: Column(
+        children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
             ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: iconColor, size: 24),
+            child: Icon(icon, color: color, size: 28),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            name,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontFamily: 'Plus Jakarta Sans',
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: AppColors.ink,
             ),
-            const SizedBox(height: 8),
-            Text(
-              name,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Plus Jakarta Sans',
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: _deepBlack,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
       ),
     );
   }
@@ -353,13 +390,13 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            const Text(
               'Colecciones Únicas',
               style: TextStyle(
                 fontFamily: 'Plus Jakarta Sans',
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: _deepBlack,
+                color: AppColors.deepBlack,
               ),
             ),
             GestureDetector(
@@ -370,40 +407,51 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontFamily: 'Plus Jakarta Sans',
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: _orangeHighlight,
+                  color: AppColors.primaryPurple,
                 ),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
         SizedBox(
-          height: 220,
+          height: 240,
           child: ListView(
             scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
             children: [
               _buildProductCard(
-                imageColor: Colors.red,
+                imageColor: AppColors.secondaryOrange.withOpacity(0.2),
+                imageAsset: 'assets/ppr0b7t3pp9_1_1.jpg',
                 badge: 'OFERTA',
-                badgeColor: _orangeHighlight,
+                badgeColor: AppColors.error,
                 discount: '-40%',
                 isFavorite: false,
+                title: 'Chaqueta Vintage',
+                price: 'S/ 89.90',
               ),
               const SizedBox(width: 16),
               _buildProductCard(
-                imageColor: Colors.grey[300]!,
-                badge: 'EXCLUSIVO',
-                badgeColor: Colors.purple,
+                imageColor: AppColors.secondaryTeal.withOpacity(0.2),
+                imageAsset:
+                    'assets/HJ9105-100_1_032d4546-b7c6-4603-8458-38bdd77fc020.webp',
+                badge: 'NUEVO',
+                badgeColor: AppColors.primaryPurple,
                 discount: null,
                 isFavorite: false,
+                title: 'Sneakers Urban',
+                price: 'S/ 249.00',
               ),
               const SizedBox(width: 16),
               _buildProductCard(
-                imageColor: Colors.blue[200]!,
+                imageColor: AppColors.secondaryBlue.withOpacity(0.2),
+                imageAsset: 'assets/w=800,h=800,fit=pad.webp',
                 badge: 'OFERTA',
-                badgeColor: _orangeHighlight,
+                badgeColor: AppColors.error,
                 discount: '-25%',
                 isFavorite: true,
+                title: 'Jeans Slim Fit',
+                price: 'S/ 129.90',
               ),
             ],
           ),
@@ -414,142 +462,169 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildProductCard({
     required Color imageColor,
+    String? imageAsset,
     required String badge,
     required Color badgeColor,
     String? discount,
     required bool isFavorite,
+    required String title,
+    required String price,
   }) {
     return Container(
       width: 160,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: AppColors.cardShadow,
+        border: Border.all(color: AppColors.line),
       ),
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Product Image Placeholder
-          Container(
-            height: 140,
-            decoration: BoxDecoration(
-              color: imageColor,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
-              ),
-            ),
-            child: Center(
-              child: Icon(
-                Icons.image,
-                size: 60,
-                color: Colors.white.withOpacity(0.5),
-              ),
-            ),
-          ),
-
-          // Badge
-          Positioned(
-            top: 8,
-            left: 8,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: badgeColor,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Text(
-                badge,
-                style: const TextStyle(
-                  fontFamily: 'Plus Jakarta Sans',
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-
-          // Favorite Icon
-          Positioned(
-            top: 8,
-            right: 8,
-            child: Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 4,
+          // Image Area
+          Expanded(
+            child: Stack(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: imageColor,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
                   ),
-                ],
-              ),
-              child: Icon(
-                isFavorite ? Icons.favorite : Icons.favorite_border,
-                size: 18,
-                color: isFavorite ? Colors.red : Colors.grey,
-              ),
-            ),
-          ),
-
-          // Discount Label
-          if (discount != null)
-            Positioned(
-              bottom: 50,
-              right: 8,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(6),
+                  child: imageAsset != null
+                      ? ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
+                          child: Image.asset(
+                            imageAsset,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Center(
+                                child: Icon(
+                                  Icons.broken_image,
+                                  size: 48,
+                                  color: AppColors.inkLighter.withOpacity(0.5),
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      : Center(
+                          child: Icon(
+                            Icons.image,
+                            size: 48,
+                            color: AppColors.inkLighter.withOpacity(0.5),
+                          ),
+                        ),
                 ),
-                child: Text(
-                  discount,
-                  style: const TextStyle(
-                    fontFamily: 'Plus Jakarta Sans',
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                Positioned(
+                  top: 12,
+                  left: 12,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: badgeColor,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      badge,
+                      style: const TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 4,
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      size: 18,
+                      color: isFavorite ? AppColors.error : AppColors.inkLight,
+                    ),
+                  ),
+                ),
+              ],
             ),
+          ),
 
-          // Product Info
+          // Info Area
           Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 4),
                 Text(
-                  'Producto Ejemplo',
-                  style: TextStyle(
+                  title,
+                  style: const TextStyle(
                     fontFamily: 'Plus Jakarta Sans',
-                    fontSize: 12,
+                    fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: _deepBlack,
+                    color: AppColors.ink,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  'S/ 99.99',
-                  style: TextStyle(
-                    fontFamily: 'Plus Jakarta Sans',
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: _deepBlack,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      price,
+                      style: const TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.deepBlack,
+                      ),
+                    ),
+                    if (discount != null) ...[
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.error.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          discount,
+                          style: const TextStyle(
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.error,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ],
             ),
@@ -566,8 +641,8 @@ class _HomeScreenState extends State<HomeScreen> {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
+            blurRadius: 20,
+            offset: const Offset(0, -5),
           ),
         ],
       ),
@@ -585,26 +660,41 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         },
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: AppColors.primaryYellow,
-        unselectedItemColor: _deepBlack,
+        backgroundColor: Colors.white,
+        selectedItemColor: AppColors.primaryPurple,
+        unselectedItemColor: AppColors.inkLight,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
         selectedLabelStyle: const TextStyle(
           fontFamily: 'Plus Jakarta Sans',
           fontSize: 12,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.bold,
         ),
         unselectedLabelStyle: const TextStyle(
           fontFamily: 'Plus Jakarta Sans',
           fontSize: 12,
+          fontWeight: FontWeight.w500,
         ),
+        elevation: 0,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Buscar'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            activeIcon: Icon(Icons.search, weight: 600),
+            label: 'Buscar',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart_outlined),
+            activeIcon: Icon(Icons.shopping_cart),
             label: 'Carrito',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
             label: 'Perfil',
           ),
         ],

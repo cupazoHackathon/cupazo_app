@@ -27,11 +27,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         _userEmail = user.email ?? '';
         // Intentar obtener nombre y avatar de user_metadata (Google Auth)
-        _userName = user.userMetadata?['full_name'] ?? 
-                    user.userMetadata?['name'] ?? 
-                    'Usuario';
-        _avatarUrl = user.userMetadata?['avatar_url'] ?? 
-                     user.userMetadata?['picture'];
+        _userName =
+            user.userMetadata?['full_name'] ??
+            user.userMetadata?['name'] ??
+            'Usuario';
+        _avatarUrl =
+            user.userMetadata?['avatar_url'] ?? user.userMetadata?['picture'];
       });
     }
   }
@@ -47,9 +48,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al cerrar sesión: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error al cerrar sesión: $e')));
       }
     }
   }
@@ -57,9 +58,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.background,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.deepBlack),
@@ -260,11 +261,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildVerticalDivider() {
-    return Container(
-      height: 40,
-      width: 1,
-      color: Colors.grey[200],
-    );
+    return Container(height: 40, width: 1, color: Colors.grey[200]);
   }
 
   Widget _buildMenuItem({
@@ -322,4 +319,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
-

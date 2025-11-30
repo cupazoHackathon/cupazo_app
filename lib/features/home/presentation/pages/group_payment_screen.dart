@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/ui/theme/colors.dart';
 import '../../domain/models/product.dart';
 import '../../domain/models/group_purchase.dart';
@@ -80,13 +81,27 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF8E1),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.deepBlack),
-          onPressed: () => Navigator.of(context).pop(),
+        leading: GestureDetector(
+          onTap: () => Navigator.of(context).pop(),
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Icon(Icons.arrow_back, color: AppColors.deepBlack, size: 20),
+          ),
         ),
         title: Text(
           'Finalizar Pago de Grupo',
@@ -97,7 +112,7 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
             color: AppColors.deepBlack,
           ),
         ),
-        centerTitle: false,
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -126,15 +141,10 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: AppColors.cardShadow,
+        border: Border.all(color: AppColors.line),
       ),
       child: Column(
         children: [
@@ -217,14 +227,19 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
 
           // Savings Banner
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: AppColors.statusSuccess.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
+              color: AppColors.success.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.success.withOpacity(0.2)),
             ),
             child: Row(
               children: [
-                Icon(Icons.savings, color: AppColors.statusSuccess, size: 20),
+                Icon(
+                  Icons.savings_outlined,
+                  color: AppColors.success,
+                  size: 20,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   'Ahorro por compra en grupo: S/ ${_savings.toStringAsFixed(2)}',
@@ -232,7 +247,7 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
                     fontFamily: 'Plus Jakarta Sans',
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.statusSuccess,
+                    color: AppColors.success,
                   ),
                 ),
               ],
@@ -283,7 +298,7 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
                   fontFamily: 'Plus Jakarta Sans',
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFFFF8A00),
+                  color: AppColors.deepBlack,
                 ),
               ),
             ],
@@ -315,9 +330,10 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
               child: _buildPaymentTab(
                 'card',
                 'Tarjeta',
-                Icons.credit_card,
+                'assets/MasterCard_Logo.svg.png', // Updated to Mastercard logo
                 _selectedPaymentMethod == 'card',
-                Colors.blue,
+                AppColors.deepBlack,
+                isImage: true,
               ),
             ),
             const SizedBox(width: 8),
@@ -325,9 +341,10 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
               child: _buildPaymentTab(
                 'yape',
                 'Yape',
-                Icons.account_balance_wallet,
+                'assets/yape.png', // Imagen real de Yape
                 _selectedPaymentMethod == 'yape',
-                Colors.purple,
+                const Color(0xFF7B2CBF), // Púrpura Yape
+                isImage: true,
               ),
             ),
             const SizedBox(width: 8),
@@ -335,9 +352,10 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
               child: _buildPaymentTab(
                 'plin',
                 'Plin',
-                Icons.payment,
+                'assets/pin.png', // Imagen real de Plin
                 _selectedPaymentMethod == 'plin',
-                Colors.lightBlue,
+                const Color(0xFF0066CC), // Azul Plin oficial
+                isImage: true,
               ),
             ),
           ],
@@ -367,18 +385,11 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
   Widget _buildPaymentTab(
     String method,
     String label,
-    IconData icon,
+    String iconPath,
     bool isSelected,
-    Color color,
-  ) {
-    // Colores específicos para Yape (púrpura) y Plin (azul claro)
-    Color selectedColor = color;
-    if (method == 'yape' && isSelected) {
-      selectedColor = Colors.purple;
-    } else if (method == 'plin' && isSelected) {
-      selectedColor = Colors.lightBlue;
-    }
-
+    Color color, {
+    bool isImage = false,
+  }) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -389,20 +400,48 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
           }
         });
       },
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? selectedColor : Colors.white,
-          borderRadius: BorderRadius.circular(8),
+          color: isSelected ? color : Colors.white,
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? selectedColor : Colors.grey[300]!,
-            width: 1.5,
+            color: isSelected ? color : Colors.grey[300]!,
+            width: isSelected ? 2 : 1.5,
           ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: color.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : [],
         ),
         child: Column(
           children: [
-            Icon(icon, color: isSelected ? Colors.white : color, size: 24),
-            const SizedBox(height: 4),
+            SizedBox(
+              width: 40,
+              height: 40,
+              child: isImage
+                  ? Image.asset(iconPath, fit: BoxFit.contain)
+                  : isSelected
+                  ? SvgPicture.asset(
+                      iconPath,
+                      colorFilter: const ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
+                    )
+                  : SvgPicture.asset(
+                      iconPath,
+                      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+                    ),
+            ),
+            const SizedBox(height: 6),
             Text(
               label,
               style: TextStyle(
@@ -420,9 +459,15 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
 
   Widget _buildSavedCard(Map<String, dynamic> card) {
     final isSelected = _selectedCardId == card['id'];
-    final cardColor = card['type'] == 'visa'
-        ? Colors.blue[200]
-        : Colors.orange[200];
+    final cardType = card['type'] as String;
+    final cardIconPath = cardType == 'visa'
+        ? 'assets/iconos/visa.svg'
+        : 'assets/MasterCard_Logo.svg.png'; // Imagen real de Mastercard
+    final isMastercard = cardType == 'mastercard';
+    final cardColor = cardType == 'visa'
+        ? AppColors
+              .deepBlack // Changed from Blue to Black
+        : const Color(0xFFEB001B); // Rojo Mastercard oficial
 
     return GestureDetector(
       onTap: () {
@@ -430,50 +475,80 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
           _selectedCardId = card['id'] as String;
         });
       },
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected
-                ? const Color(0xFFFF8A00)
-                : AppColors.primaryYellow.withOpacity(0.5),
-            width: isSelected ? 2 : 1,
+            color: isSelected ? cardColor : AppColors.line,
+            width: isSelected ? 2.5 : 1.5,
           ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: cardColor.withOpacity(0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
         ),
         child: Row(
           children: [
             Container(
-              width: 48,
-              height: 32,
+              width: 56,
+              height: 36,
               decoration: BoxDecoration(
-                color: cardColor,
-                borderRadius: BorderRadius.circular(4),
+                color: isMastercard ? Colors.white : cardColor,
+                borderRadius: BorderRadius.circular(6),
+                border: isMastercard
+                    ? Border.all(color: Colors.grey[200]!, width: 1)
+                    : null,
               ),
-              child: Icon(Icons.credit_card, color: Colors.white, size: 20),
+              child: Padding(
+                padding: const EdgeInsets.all(4),
+                child: isMastercard
+                    ? Image.asset(cardIconPath, fit: BoxFit.contain)
+                    : SvgPicture.asset(
+                        cardIconPath,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+              ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${card['type']?.toString().toUpperCase()} .... ${card['last4']}',
+                    '${cardType.toUpperCase()} •••• ${card['last4']}',
                     style: TextStyle(
                       fontFamily: 'Plus Jakarta Sans',
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: AppColors.ink,
+                      letterSpacing: 0.5,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 6),
                   Text(
                     'Vence ${card['expiry']}',
                     style: TextStyle(
                       fontFamily: 'Plus Jakarta Sans',
-                      fontSize: 12,
+                      fontSize: 13,
                       color: AppColors.inkSoft,
                     ),
                   ),
@@ -481,10 +556,17 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
               ),
             ),
             if (isSelected)
-              Icon(
-                Icons.check_circle,
-                color: AppColors.statusSuccess,
-                size: 24,
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: AppColors.statusSuccess.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.check_circle_rounded,
+                  color: AppColors.statusSuccess,
+                  size: 28,
+                ),
               ),
           ],
         ),
@@ -678,7 +760,9 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
 
   Widget _buildDigitalWalletOptions() {
     final isYape = _selectedPaymentMethod == 'yape';
-    final primaryColor = isYape ? Colors.purple : Colors.lightBlue;
+    final primaryColor = isYape
+        ? const Color(0xFF7B2CBF) // Púrpura Yape oficial
+        : const Color(0xFF0066CC); // Azul Plin oficial
     final accountName = isYape ? 'Yape' : 'Plin';
 
     return Column(
@@ -700,10 +784,7 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: AppColors.primaryYellow.withOpacity(0.5),
-              width: 1,
-            ),
+            border: Border.all(color: AppColors.line, width: 1),
           ),
           child: Column(
             children: [
@@ -924,17 +1005,11 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
             fillColor: AppColors.primaryYellow.withOpacity(0.2),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(
-                color: AppColors.primaryYellow.withOpacity(0.5),
-                width: 1.5,
-              ),
+              borderSide: BorderSide(color: AppColors.line, width: 1.5),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(
-                color: AppColors.primaryYellow.withOpacity(0.5),
-                width: 1.5,
-              ),
+              borderSide: BorderSide(color: AppColors.line, width: 1.5),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -963,8 +1038,8 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.primaryYellow,
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.deepBlack,
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -975,7 +1050,7 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
               fontFamily: 'Plus Jakarta Sans',
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: AppColors.deepBlack,
+              color: Colors.white,
             ),
           ),
           const SizedBox(height: 8),
@@ -985,7 +1060,7 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
             style: TextStyle(
               fontFamily: 'Plus Jakarta Sans',
               fontSize: 14,
-              color: AppColors.deepBlack,
+              color: Colors.white.withOpacity(0.8),
               height: 1.5,
             ),
           ),
@@ -1166,18 +1241,19 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
                     }
                   },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.statusSuccess,
-              foregroundColor: Colors.white,
+              backgroundColor: AppColors.primaryYellow,
+              foregroundColor: AppColors.deepBlack,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(16),
               ),
+              elevation: 0,
             ),
             child: _isProcessing
                 ? const SizedBox(
                     width: 24,
                     height: 24,
                     child: CircularProgressIndicator(
-                      color: Colors.white,
+                      color: AppColors.deepBlack,
                       strokeWidth: 2,
                     ),
                   )

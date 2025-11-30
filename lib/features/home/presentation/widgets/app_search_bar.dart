@@ -21,37 +21,44 @@ class AppSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.deepBlack,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      color: AppColors.background,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Row(
         children: [
           // Back Button
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: AppColors.primaryYellow,
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              icon: Icon(Icons.arrow_back, color: AppColors.deepBlack),
-              onPressed: onBackPressed ?? () => Navigator.of(context).pop(),
+          GestureDetector(
+            onTap: onBackPressed ?? () => Navigator.of(context).pop(),
+            child: Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Icon(Icons.arrow_back, color: AppColors.deepBlack),
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 12),
 
-          // Search Bar - limitado en ancho para que no pase la franja negra
+          // Search Bar
           Flexible(
             flex: 3,
             child: Container(
               height: 44,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 4,
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
                 ],
@@ -63,11 +70,14 @@ class AppSearchBar extends StatelessWidget {
                   hintStyle: TextStyle(
                     fontFamily: 'Plus Jakarta Sans',
                     fontSize: 14,
-                    color: Colors.grey[600],
+                    color: AppColors.inkLighter,
                   ),
-                  prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
+                  prefixIcon: Icon(Icons.search, color: AppColors.inkLight),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 11,
+                  ),
                 ),
               ),
             ),
@@ -75,37 +85,40 @@ class AppSearchBar extends StatelessWidget {
           const SizedBox(width: 12),
 
           // Cart Icon
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: AppColors.primaryYellow,
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              icon: Icon(
-                Icons.shopping_cart_outlined,
-                color: AppColors.deepBlack,
-              ),
-              onPressed: onCartPressed,
-            ),
+          _buildActionButton(
+            icon: Icons.shopping_cart_outlined,
+            onTap: onCartPressed,
           ),
           const SizedBox(width: 8),
 
           // Profile Icon
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: AppColors.primaryYellow,
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              icon: Icon(Icons.person_outline, color: AppColors.deepBlack),
-              onPressed: onProfilePressed,
-            ),
+          _buildActionButton(
+            icon: Icons.person_outline,
+            onTap: onProfilePressed,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton({required IconData icon, VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Icon(icon, color: AppColors.deepBlack),
       ),
     );
   }
