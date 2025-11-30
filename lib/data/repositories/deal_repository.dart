@@ -28,7 +28,7 @@ class DealRepository {
     try {
       final response = await _supabase
           .from('deals')
-          .select()
+          .select('*, match_groups(status, match_group_members(user_id))')
           .eq('category', category)
           .eq('active', true)
           .order('created_at', ascending: false);

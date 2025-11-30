@@ -120,8 +120,36 @@ class _ProductCardState extends State<ProductCard> {
                     ),
                   ),
 
-                  // Número de ranking (esquina inferior izquierda) - solo si hay ranking
-                  if (widget.ranking != null)
+                  // Avatar de grupo activo (reemplaza al ranking si existe)
+                  if (widget.product.activeGroupAvatar != null &&
+                      widget.product.activeGroupAvatar!.isNotEmpty)
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      child: Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            widget.product.activeGroupAvatar!,
+                          ),
+                        ),
+                      ),
+                    )
+                  // Número de ranking (esquina inferior izquierda) - solo si NO hay grupo activo y hay ranking
+                  else if (widget.ranking != null)
                     Positioned(
                       bottom: 0,
                       left: 0,

@@ -12,6 +12,7 @@ class Product {
   final int interestedCount;
   final String category;
   final bool isFavorite;
+  final String? activeGroupAvatar;
 
   Product({
     required this.id,
@@ -26,6 +27,7 @@ class Product {
     required this.interestedCount,
     required this.category,
     this.isFavorite = false,
+    this.activeGroupAvatar,
   });
 }
 

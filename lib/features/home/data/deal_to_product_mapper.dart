@@ -58,6 +58,7 @@ class DealToProductMapper {
       interestedCount: 0, // Will be updated from deal_interests if needed
       category: deal.category,
       isFavorite: false,
+      activeGroupAvatar: deal.activeGroupAvatar,
     );
   }
 

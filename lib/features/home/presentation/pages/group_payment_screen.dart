@@ -5,6 +5,7 @@ import '../../domain/models/group_purchase.dart';
 
 import '../../../../data/repositories/match_group_repository.dart';
 import '../../../../data/repositories/match_group_member_repository.dart';
+import '../../../../data/repositories/transaction_repository.dart';
 import '../../../../services/supabase_service.dart';
 
 /// Pantalla de pago de grupo
@@ -49,6 +50,7 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
   bool _isProcessing = false;
   final _groupRepository = MatchGroupRepository();
   final _memberRepository = MatchGroupMemberRepository();
+  final _transactionRepository = TransactionRepository();
 
   @override
   void initState() {
@@ -1088,6 +1090,17 @@ class _GroupPaymentScreenState extends State<GroupPaymentScreen> {
                         deliveryAddress: 'Av. Larco 1234, Miraflores', // Mock
                         deliveryLat: -12.12, // Mock
                         deliveryLng: -77.03, // Mock
+                      );
+
+                      // Registrar transacción
+                      await _transactionRepository.createTransaction(
+                        matchGroupId: groupId,
+                        payerUserId: userId,
+                        amountTotal: _groupPrice,
+                        platformFee: 0.0, // Mock
+                        deliveryFee: 0.0, // Mock
+                        paymentStatus: 'completed',
+                        stripePaymentId: 'mock_payment_id',
                       );
 
                       // Navegar de regreso a la pantalla de detalle del producto

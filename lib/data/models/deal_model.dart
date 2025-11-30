@@ -15,6 +15,7 @@ class DealModel {
   final DateTime createdAt;
   final DateTime expiresAt;
   final String imageUrl;
+  final String? activeGroupAvatar;
 
   DealModel({
     required this.id,
@@ -32,9 +33,30 @@ class DealModel {
     required this.createdAt,
     required this.expiresAt,
     required this.imageUrl,
+    this.activeGroupAvatar,
   });
 
   factory DealModel.fromJson(Map<String, dynamic> json) {
+    // Extraer avatar del grupo activo si existe en la respuesta unida
+    String? avatarUrl;
+    if (json['match_groups'] != null && json['match_groups'] is List) {
+      final groups = json['match_groups'] as List;
+      // Buscar un grupo activo (open)
+      final activeGroup = groups.firstWhere(
+        (g) => g['status'] == 'open',
+        orElse: () => null,
+      );
+
+      if (activeGroup != null && activeGroup['match_group_members'] != null) {
+        final members = activeGroup['match_group_members'] as List;
+        if (members.isNotEmpty) {
+          // Usamos una imagen de perfil por defecto ya que no podemos hacer join con users
+          // por restricciones de la base de datos (tabla users no existe o no tiene permisos)
+          avatarUrl = 'https://ui-avatars.com/api/?name=U&background=random';
+        }
+      }
+    }
+
     return DealModel(
       id: json['id'] as String,
       userId: json['user_id'] as String? ?? '',
@@ -56,6 +78,7 @@ class DealModel {
           ? DateTime.parse(json['expires_at'] as String) 
           : DateTime.now().add(const Duration(days: 30)),
       imageUrl: json['image_url'] as String? ?? '',
+      activeGroupAvatar: avatarUrl,
     );
   }
 
