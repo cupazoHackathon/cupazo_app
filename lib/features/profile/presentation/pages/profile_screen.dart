@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/ui/theme/colors.dart';
+import 'my_orders_screen.dart';
 import '../../../../services/supabase_service.dart';
 import '../../../auth/presentation/pages/login_page.dart';
 
@@ -168,7 +169,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               title: 'Mis Pedidos',
               subtitle: 'Ver historial de compras',
               color: AppColors.primaryYellow,
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MyOrdersScreen(),
+                  ),
+                );
+              },
             ),
             _buildMenuItem(
               icon: Icons.favorite_border,
